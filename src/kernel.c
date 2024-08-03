@@ -279,10 +279,15 @@ static void
 init_copy(mrb_state *mrb, mrb_value dest, mrb_value obj)
 {
   switch (mrb_type(obj)) {
+    case MRB_TT_ICLASS:
+      copy_class(mrb, dest, obj);
+      return;
     case MRB_TT_CLASS:
     case MRB_TT_MODULE:
       copy_class(mrb, dest, obj);
-      /* fall through */
+      mrb_iv_copy(mrb, dest, obj);
+      mrb_iv_remove(mrb, dest, mrb_intern_lit(mrb, "__classname__"));
+      break;
     case MRB_TT_OBJECT:
     case MRB_TT_SCLASS:
     case MRB_TT_HASH:
@@ -343,6 +348,7 @@ mrb_obj_clone(mrb_state *mrb, mrb_value self)
   mrb_field_write_barrier(mrb, (struct RBasic*)p, (struct RBasic*)p->c);
   clone = mrb_obj_value(p);
   init_copy(mrb, clone, self);
+  p->flags |= mrb_obj_ptr(self)->flags & MRB_FLAG_IS_FROZEN;
 
   return clone;
 }
