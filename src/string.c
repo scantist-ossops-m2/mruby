@@ -905,7 +905,7 @@ mrb_str_chomp_bang(mrb_state *mrb, mrb_value str)
   struct RString *s = mrb_str_ptr(str);
 
   if (len < 0) {
-    mrb_raisef(mrb, E_ARGUMENT_ERROR, "negative (or overflowed) string size");
+    mrb_raise(mrb, E_ARGUMENT_ERROR, "negative (or overflowed) string size");
   }
   mrb_str_modify(mrb, s);
   len = s->len;
