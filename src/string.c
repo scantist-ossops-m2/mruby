@@ -1162,6 +1162,9 @@ mrb_str_capitalize_bang(mrb_state *mrb, mrb_value str)
   mrb_bool modify = FALSE;
   struct RString *s = mrb_str_ptr(str);
 
+  if (len < 0) {
+    mrb_raisef(mrb, E_ARGUMENT_ERROR, "negative (or overflowed) string size");
+  }
   mrb_str_modify(mrb, s);
   if (RSTR_LEN(s) == 0 || !RSTR_PTR(s)) return mrb_nil_value();
   p = RSTR_PTR(s); pend = RSTR_PTR(s) + RSTR_LEN(s);
