@@ -844,6 +844,9 @@ mrb_str_capitalize_bang(mrb_state *mrb, mrb_value str)
   int modify = 0;
   struct RString *s = mrb_str_ptr(str);
 
+  if (len < 0) {
+    mrb_raise(mrb, E_ARGUMENT_ERROR, "negative (or overflowed) string size");
+  }
   mrb_str_modify(mrb, s);
   if (s->len == 0 || !s->ptr) return mrb_nil_value();
   p = s->ptr; pend = s->ptr + s->len;
@@ -901,6 +904,9 @@ mrb_str_chomp_bang(mrb_state *mrb, mrb_value str)
   mrb_int len;
   struct RString *s = mrb_str_ptr(str);
 
+  if (len < 0) {
+    mrb_raise(mrb, E_ARGUMENT_ERROR, "negative (or overflowed) string size");
+  }
   mrb_str_modify(mrb, s);
   len = s->len;
   if (mrb_get_args(mrb, "|S", &rs) == 0) {
